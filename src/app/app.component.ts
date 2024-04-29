@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import axios from 'axios';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import axios, { CancelTokenSource } from 'axios';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +17,115 @@ export class AppComponent {
   id_artist: number | null = null;
   sortedTittle: string = '';
 
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('autocompleteList') autocompleteList!: ElementRef<HTMLUListElement>;
+
+  async onInput() {
+    const inputValue = this.searchInput.nativeElement.value;
+    await this.autocompleteSearch(inputValue);
+  }
+  closeAutocompleteList() {
+    const inputValue = this.searchInput!.nativeElement.value.trim();
+    if (!inputValue) {
+      this.autocompleteList!.nativeElement.style.display = 'none';
+    }
+  }
+
+  openAutocompleteList() {
+    if (this.autocompleteList) {
+      this.autocompleteList.nativeElement.style.display = 'block';
+    }
+  }
+
+  currentSearchRequest: CancelTokenSource | null = null;
+
+  autocompleteSuggestions: string[] = [];
+  showAutocompleteList: boolean = false;
+
+  async autocompleteSearch(inputValue: string) {
+    if (inputValue.length < 2) {
+      this.autocompleteSuggestions = [];
+      this.showAutocompleteList = false;
+      return;
+    }
+
+    if (this.currentSearchRequest) {
+      this.currentSearchRequest.cancel('Nova solicitação feita');
+    }
+
+    this.currentSearchRequest = axios.CancelToken.source();
+
+    const options = {
+      method: 'GET',
+      url: 'https://deezerdevs-deezer.p.rapidapi.com/search',
+      params: { q: inputValue },
+      headers: {
+        'X-RapidAPI-Key': '45a4ea20c7msh0dcc6f9f93fdc5ep1dfa4fjsn6f64d2cbdd27',
+        'X-RapidAPI-Host': 'deezerdevs-deezer.p.rapidapi.com'
+      },
+      cancelToken: this.currentSearchRequest.token
+    };
+
+    try {
+      const response = await axios.request(options);
+      const uniqueArtistNames: Set<string> = new Set();
+
+      response.data.data.forEach((item: any) => {
+        uniqueArtistNames.add(item.artist.name);
+      });
+
+      const artistNames = Array.from(uniqueArtistNames).sort((a, b) => {
+        const similarityA = this.calculateSimilarity(inputValue.toLowerCase(), a.toLowerCase());
+        const similarityB = this.calculateSimilarity(inputValue.toLowerCase(), b.toLowerCase());
+        return similarityB - similarityA;
+      }).slice(0, 11);
+
+      this.autocompleteSuggestions = artistNames;
+      this.showAutocompleteList = true;
+
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        console.log('Solicitação cancelada');
+      } else {
+        console.error(error);
+      }
+    }
+  }
+
+  selectSuggestion(suggestion: string) {
+    this.displayVal = suggestion;
+    this.showAutocompleteList = false;
+    this.search();
+  }
+
+  calculateSimilarity(input: string, target: string): number {
+    const m = input.length;
+    const n = target.length;
+
+    if (m === 0) return n;
+    if (n === 0) return m;
+
+    const distances: number[][] = [];
+    for (let i = 0; i <= m; i++) {
+      distances[i] = [i];
+    }
+    for (let j = 0; j <= n; j++) {
+      distances[0][j] = j;
+    }
+
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        const cost = (input.charAt(i - 1) === target.charAt(j - 1)) ? 0 : 1;
+        distances[i][j] = Math.min(
+          distances[i - 1][j] + 1,
+          distances[i][j - 1] + 1,
+          distances[i - 1][j - 1] + cost
+        );
+      }
+    }
+    return 1 - distances[m][n] / Math.max(m, n);
+  }
+
   async search() {
     const options = {
       method: 'GET',
@@ -30,27 +139,27 @@ export class AppComponent {
 
     try {
       const response = await axios.request(options);
-      console.log(response.data);
+      console.log('Resposta da API:', response.data);
+      console.log('Parâmetros da solicitação:', options.params);
+
 
       if (response.data.data.length > 0) {
         const songsByArtist = response.data.data.filter((item: any) => item.artist.name.toLowerCase() === this.displayVal.toLowerCase());
 
         if (songsByArtist.length > 0) {
-          // Escolher uma música aleatória do artista pesquisado
+          //draw music
           const randomIndex = Math.floor(Math.random() * songsByArtist.length);
           this.previewUrl = songsByArtist[randomIndex].preview;
           this.sortedTittle = songsByArtist[randomIndex].title;
-          console.log(this.previewUrl);
           this.searchedValue = songsByArtist;
 
-          // Extrair títulos da resposta para sugestões
+          //title for suggestions
           this.suggestions = songsByArtist.map((item: any) => item.title);
           this.id_artist = songsByArtist.find((item: any) => !!item.artist.id)?.artist.id || null;
 
           this.filterSuggestions();
 
           const audioElement = document.querySelector('audio') as HTMLAudioElement;
-          audioElement.volume = 0.3;
           audioElement.src = this.previewUrl;
         } else {
           console.log('Não foram encontradas músicas do artista pesquisado.');
@@ -67,7 +176,6 @@ export class AppComponent {
     }
 
     const options2 = {
-
       method: 'GET',
       url: `https://deezerdevs-deezer.p.rapidapi.com/artist/${this.id_artist}`,
       headers: {
