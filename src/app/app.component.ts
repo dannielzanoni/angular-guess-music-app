@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild, input } from '@angular/core';
 import axios, { CancelTokenSource } from 'axios';
 import { ApiRequestService } from './services/api-request.service';
+import WaveSurfer from 'wavesurfer.js';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,25 @@ import { ApiRequestService } from './services/api-request.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+  wavesurfer!: WaveSurfer;
+  isPlaying: boolean = false;
+  volume = 0.2;
+
+  updateVolume(): void {
+    if (this.wavesurfer) {
+      this.wavesurfer.setVolume(this.volume);
+    }
+  }
+
+  togglePlayback(): void {
+    if (this.isPlaying) {
+      this.wavesurfer.pause();
+    } else {
+      this.wavesurfer.play();
+    }
+    this.isPlaying = !this.isPlaying;
+  }
 
   constructor(private apiRequestService: ApiRequestService) { }
 
@@ -90,8 +110,28 @@ export class AppComponent {
           }
           this.filterSuggestions();
 
-          const audioElement = document.querySelector('audio') as HTMLAudioElement;
-          audioElement.src = this.previewUrl;
+          this.isPlaying = false;
+          if (this.wavesurfer) {
+            this.wavesurfer.stop();
+            this.wavesurfer.destroy();
+          }
+
+          this.wavesurfer = WaveSurfer.create({
+            container: '#waveform',
+            waveColor: 'rgb(200, 0, 200)',
+            progressColor: 'rgb(100, 0, 100)',
+            barWidth: 2,
+            barGap: 1,
+            barRadius: 2,
+            height: 40,
+            width: 300,
+            interact: false
+          });
+          this.wavesurfer.on('ready', () => {
+            this.togglePlayback();
+          });
+          this.wavesurfer.load(this.previewUrl);
+          this.playAudio();
         } else {
           console.log('Não foram encontradas músicas do artista pesquisado.');
         }
@@ -104,6 +144,14 @@ export class AppComponent {
       }
     } catch (error) {
       console.error('Erro ao obter os dados do artista:', error);
+    }
+  }
+
+  playAudio() {
+    if (this.wavesurfer) {
+      this.wavesurfer.on('ready', () => {
+        this.togglePlayback();
+      });
     }
   }
 

@@ -17,7 +17,7 @@ h1 {
   font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol";
-    margin-top: 6rem;
+    margin-top: 4rem;
 }
 
 .container {
@@ -56,12 +56,6 @@ button:hover {
   color: #fff;
 }
 
-.guess{
-  justify-content: center;
-  display: flex;
-  margin-top: 2rem;
-}
-
 
 ul {
   list-style-type: none;
@@ -92,14 +86,18 @@ li:hover {
   justify-content: center;
   align-items: center;
   width: 20rem;
-  height: 20rem; 
+  height: 17rem; 
   border-radius: 20px;
   box-shadow: 0 50px 80px rgba(0, 0, 0, 0.5);
   box-sizing: border-box; 
   margin-left: 45rem;
   margin-top: 3rem;
   margin-left: 41.5%;
-  background-color: #F1F3F4;
+  background-color: #1F1F23;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .player-preview .imgbox {
@@ -114,9 +112,12 @@ li:hover {
   left: 0;
   width: 100%;
   height: 100%; 
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   object-fit: cover;
+  background-color: #1F1F23;
 }
 
 .player-preview audio{
@@ -149,4 +150,22 @@ li:hover {
 
 .autocomplete-item:hover {
   background-color: #ddd;
+}
+
+.guess{
+  justify-content: center;
+  margin-top: 2rem;
+  display: flex;
+}
+
+.custom-button {
+  border: none;
+  background-color: transparent; 
+  padding: 0; 
+  cursor: pointer; 
+}
+
+.custom-button img {
+  width: 32px; 
+  height: 32px;
 }
