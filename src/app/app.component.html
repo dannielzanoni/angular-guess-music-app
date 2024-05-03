@@ -19,8 +19,8 @@
   <audio #audioPlayer controls *ngIf="previewUrl">
     <source [src]="previewUrl" type="audio/mpeg">
     Your browser does not support the audio element.
-  </audio>
-</div>
+    </audio> -->
+  </div>
 
 <div class="guess" *ngIf="previewUrl">
   <input type="text" [(ngModel)]="guessValue" (input)="fetchSuggestions()">
