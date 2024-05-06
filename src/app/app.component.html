@@ -2,12 +2,18 @@
 <h1>Guess The Music</h1>
 <br>
 <div class="container">
-  <input type="text" #searchInput (input)="onInput()" (blur)="closeAutocompleteList()" (focus)="openAutocompleteList()" [(ngModel)]="displayVal" placeholder="Type a artist">
-  <button (click)="GetArtistData()">Search</button>
+  <div class="wrapper">
+    <div class="search-container">
+      <input type="text" #searchInput (input)="onInput()" (blur)="closeAutocompleteList()" (focus)="openAutocompleteList()" [(ngModel)]="displayVal" placeholder="Type an artist">
+      <button (click)="GetArtistData()">Search</button>
+    </div>
+    <div class="results">
+      <ul *ngIf="showAutocompleteList" #autocompleteList>
+        <li *ngFor="let suggestion of autocompleteSuggestions" (click)="selectSuggestion(suggestion); GetArtistData()">{{ suggestion }}</li>
+      </ul>
+    </div>
+  </div>
 </div>
-<ul *ngIf="showAutocompleteList" #autocompleteList class="autocomplete-list">
-  <li *ngFor="let suggestion of autocompleteSuggestions" (click)="selectSuggestion(suggestion); GetArtistData()">{{ suggestion }}</li>
-</ul>
 
 <div class="player-preview" *ngIf="previewUrl">
   <div class="imgbox">
