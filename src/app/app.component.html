@@ -1,40 +1,101 @@
-
 <h1>Guess The Music</h1>
-<br>
+<br />
 <div class="container">
   <div class="wrapper">
     <div class="search-container">
-      <input type="text" #searchInput (input)="onInput()" (blur)="closeAutocompleteList()" (focus)="openAutocompleteList()" [(ngModel)]="displayVal" placeholder="Type an artist">
-      <button (click)="GetArtistData()">Search</button>
+      <input
+        type="text"
+        #searchInput
+        (input)="onInput()"
+        (blur)="closeAutocompleteList()"
+        (focus)="openAutocompleteList()"
+        [(ngModel)]="displayVal"
+        placeholder="Type an artist"
+        class="input-value"
+      />
+      <button class="default-button" (click)="GetArtistData()">Search</button>
     </div>
     <div class="results">
-      <ul *ngIf="showAutocompleteList" #autocompleteList>
-        <li *ngFor="let suggestion of autocompleteSuggestions" (click)="selectSuggestion(suggestion); GetArtistData()">{{ suggestion }}</li>
+      <ul *ngIf="showAutocompleteList" #autocompleteList class="ul-default">
+        <li
+          class="li-default"
+          *ngFor="let suggestion of autocompleteSuggestions"
+          (click)="selectSuggestion(suggestion); GetArtistData()"
+        >
+          {{ suggestion }}
+        </li>
       </ul>
     </div>
   </div>
 </div>
 
-<div class="player-preview" *ngIf="previewUrl">
-  <div class="imgbox">
-    <img class="imagem-controller">
+<div class="panel">
+  <div class="player-preview" *ngIf="previewUrl">
+    <div class="imgbox">
+      <img class="imagem-controller" />
+    </div>
+  </div>
+  <div class="guess" *ngIf="previewUrl">
+    <div class="guess-container">
+      <div id="waveform" class="audio-player">
+        <source [src]="this.previewUrl" type="audio/mpeg" />
+      </div>
+      <button class="custom-button" (click)="togglePlayback()">
+        <img
+          *ngIf="!isPlaying"
+          src="../assets/play-circle-fill.svg"
+          alt="Pause"
+        />
+        <img
+          *ngIf="isPlaying"
+          src="../assets/pause-circle-fill.svg"
+          alt="Play"
+        />
+      </button>
+      <input
+        type="range"
+        value="0.2"
+        min="0"
+        max="1"
+        step="0.01"
+        [(ngModel)]="volume"
+        (ngModelChange)="updateVolume()"
+        id="sound-slider"
+      />
+    </div>
+
+    <div class="guess-info">
+      <div class="guess-input-container">
+        <input
+          type="text"
+          [(ngModel)]="guessValue"
+          (input)="fetchSuggestions()"
+        />
+        <button class="default-button">+1s</button>
+      </div>
+      <div class="guess-results">
+        <ul *ngIf="showSuggestions()" class="ul-default">
+          <li
+            class="li-default"
+            *ngFor="let suggestion of filteredSuggestions.slice(0, 5)"
+            (click)="checkSelection(suggestion)"
+          >
+            {{ suggestion }}
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="guess" *ngIf="previewUrl">
-  <div id="waveform" class="audio-player">
-    <source [src]="this.previewUrl" type="audio/mpeg">
-  </div>
-  
-  <button class="custom-button" (click)="togglePlayback()">
-    <img *ngIf="!isPlaying" src="../assets/play.png" alt="Pause">
-    <img *ngIf="isPlaying" src="../assets/pause.png" alt="Play">
-  </button> 
-  
-  <input type="range" min="0" max="1" step="0.01" [(ngModel)]="volume" (ngModelChange)="updateVolume()">
-  <input type="text" [(ngModel)]="guessValue" (input)="fetchSuggestions()">
-  <button>+1s</button>
+<div class="attempts">
+  <ul class="ul-attempts">
+    <li
+      class="li-attempts"
+      *ngFor="let attempt of attempts"
+      [ngStyle]="{ color: attempt.correct ? 'green' : 'red' }"
+    >
+      {{ attempt.text }}
+    </li>
+  </ul>
 </div>
-<ul *ngIf="showSuggestions()">
-  <li *ngFor="let suggestion of filteredSuggestions.slice(0, 11)" (click)="checkSelection(suggestion)">{{ suggestion }}</li>
-</ul>

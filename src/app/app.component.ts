@@ -1,7 +1,7 @@
-import { Component, ElementRef, ViewChild, input } from '@angular/core';
-import axios, { CancelTokenSource } from 'axios';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ApiRequestService } from './services/api-request.service';
 import WaveSurfer from 'wavesurfer.js';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +14,6 @@ export class AppComponent {
   isPlaying: boolean = false;
   volume = 0.2;
 
-  updateVolume(): void {
-    if (this.wavesurfer) {
-      this.wavesurfer.setVolume(this.volume);
-    }
-  }
-
   togglePlayback(): void {
     if (this.isPlaying) {
       this.wavesurfer.pause();
@@ -29,7 +23,7 @@ export class AppComponent {
     this.isPlaying = !this.isPlaying;
   }
 
-  constructor(private apiRequestService: ApiRequestService) { }
+  constructor(private apiRequestService: ApiRequestService, private toastr: ToastrService) { }
 
   title = 'my-app';
   displayVal: string = '';
@@ -40,6 +34,7 @@ export class AppComponent {
   filteredSuggestions: string[] = [];
   id_artist: number | null = null;
   sortedTittle: string = '';
+  attempts: { text: string, correct: boolean }[] = [];
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('autocompleteList') autocompleteList!: ElementRef<HTMLUListElement>;
@@ -90,6 +85,8 @@ export class AppComponent {
   artistData: any;
   async GetArtistData() {
     try {
+      this.volume = 0.1;
+      this.updateVolume();
       this.artistData = await this.apiRequestService.searchArtist(this.displayVal);
       console.log('Dados do artista:', this.artistData);
       if (this.artistData.data.length > 0) {
@@ -118,10 +115,10 @@ export class AppComponent {
 
           this.wavesurfer = WaveSurfer.create({
             container: '#waveform',
-            waveColor: 'rgb(200, 0, 200)',
-            progressColor: 'rgb(100, 0, 100)',
+            waveColor: 'rgb(169, 29, 58)',
+            progressColor: 'rgb(70, 17, 17)',
             barWidth: 2,
-            barGap: 1,
+            barGap: 3,
             barRadius: 2,
             height: 40,
             width: 300,
@@ -185,21 +182,19 @@ export class AppComponent {
     return this.filteredSuggestions.length > 0 && this.guessValue.length > 0;
   }
 
-  checkGuess() {
-    if (this.guessValue.toLowerCase() === this.getCurrentSongTitle().toLowerCase()) {
-      alert('Parabéns! Você acertou o título da música!');
-    } else {
-      alert('Oops! Sua adivinhação está incorreta. Tente novamente!');
-    }
-  }
   checkSelection(selectedTitle: string) {
-    if (selectedTitle.toLowerCase() === this.getCurrentSongTitle().toLowerCase()) {
-      alert('Parabéns! Você selecionou a música correta!');
-    } else {
-      alert('Oops! Sua seleção está incorreta. Tente novamente!');
-    }
+    const correct = selectedTitle.toLowerCase() === this.getCurrentSongTitle().toLowerCase();
+    this.attempts.push({ text: selectedTitle, correct });
   }
+
   getCurrentSongTitle(): string {
     return this.sortedTittle;
   }
+
+  updateVolume(): void {
+    if (this.wavesurfer) {
+      this.wavesurfer.setVolume(this.volume);
+    }
+  }
+
 }
