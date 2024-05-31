@@ -24,7 +24,7 @@ h1 {
   color: #fff;
 }
 
-.ul-default {
+/* .ul-default {
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -42,7 +42,7 @@ h1 {
 
 .li-default:hover {
   background-color: #f0f0f0;
-}
+} */
 
 .player-preview .imgbox {
   position: relative;
@@ -145,7 +145,6 @@ h1 {
   width: 20rem;
   border: none;
   height: 3rem;
-  border-radius: 5px;
   padding: 0px 40px 0px 10px;
   font-size: 18px;
   box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.1);
@@ -165,10 +164,10 @@ h1 {
 
 .results {
   text-align: center;
-  width: 23rem;
-  margin-right: 6rem;
+  width: 23.1rem;
   position: absolute;
   margin-top: 5rem;
+  margin-right: 5.79rem;
   z-index: 999;
 }
 
@@ -179,6 +178,9 @@ h1 {
   background-color: #f0f0f0;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  color: black;
+  width: 100%;
+  margin-left: 0.1rem;
 }
 
 .results li {
@@ -233,16 +235,14 @@ h1 {
   height: 3rem;
   padding: 0px 0px 0px 10px;
   font-size: 18px;
-  box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.1);
 }
 
 .guess-results {
   text-align: center;
-  width: 20.4rem;
-  margin-right: 4rem;
+  width: 20.6rem;
   position: absolute;
   margin-top: 3rem;
-  z-index: 999;
+  margin-right: 4.25rem;
 }
 
 .guess-results ul {
@@ -252,6 +252,8 @@ h1 {
   background-color: #f0f0f0;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  color: black;
+  width: 100%;
 }
 
 .guess-results li {
@@ -264,7 +266,7 @@ h1 {
 }
 
 #sound-slider {
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
   margin-left: 0.5rem;
   -webkit-appearance: none;
   appearance: none;
@@ -327,14 +329,15 @@ h1 {
 }
 
 .attempts {
-  margin-top: 10px;
+  margin-top: 5rem;
+  margin-left: 35rem;
 }
 
-.ul-attempts ul {
+.attempts ul{
   list-style-type: none;
   padding: 0;
 }
 
-.li-attempts li {
+.attempts li {
   padding: 5px 0;
 }

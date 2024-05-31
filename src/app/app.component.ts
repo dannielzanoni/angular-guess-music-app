@@ -70,6 +70,7 @@ export class AppComponent {
       this.autocompleteList!.nativeElement.style.display = 'none';
     }
   }
+
   openAutocompleteList() {
     if (this.autocompleteList) {
       this.autocompleteList.nativeElement.style.display = 'block';

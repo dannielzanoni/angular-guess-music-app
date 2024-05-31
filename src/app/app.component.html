@@ -16,9 +16,8 @@
       <button class="default-button" (click)="GetArtistData()">Search</button>
     </div>
     <div class="results">
-      <ul *ngIf="showAutocompleteList" #autocompleteList class="ul-default">
+      <ul *ngIf="showAutocompleteList" #autocompleteList>
         <li
-          class="li-default"
           *ngFor="let suggestion of autocompleteSuggestions"
           (click)="selectSuggestion(suggestion); GetArtistData()"
         >
@@ -40,7 +39,7 @@
       <div id="waveform" class="audio-player">
         <source [src]="this.previewUrl" type="audio/mpeg" />
       </div>
-      <button class="custom-button" (click)="togglePlayback()">
+      <!-- <button class="custom-button" (click)="togglePlayback()">
         <img
           *ngIf="!isPlaying"
           src="../assets/play-circle-fill.svg"
@@ -51,7 +50,7 @@
           src="../assets/pause-circle-fill.svg"
           alt="Play"
         />
-      </button>
+      </button> -->
       <input
         type="range"
         value="0.2"
@@ -71,12 +70,11 @@
           [(ngModel)]="guessValue"
           (input)="fetchSuggestions()"
         />
-        <button class="default-button">+1s</button>
+        <button class="default-button">Play</button>
       </div>
       <div class="guess-results">
-        <ul *ngIf="showSuggestions()" class="ul-default">
+        <ul *ngIf="showSuggestions()">
           <li
-            class="li-default"
             *ngFor="let suggestion of filteredSuggestions.slice(0, 5)"
             (click)="checkSelection(suggestion)"
           >
