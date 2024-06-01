@@ -24,26 +24,6 @@ h1 {
   color: #fff;
 }
 
-/* .ul-default {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  text-align: center;
-  color: black;
-  cursor: pointer;
-}
-
-.li-default {
-  display: block;
-  text-decoration: none;
-  color: black;
-  cursor: pointer;
-}
-
-.li-default:hover {
-  background-color: #f0f0f0;
-} */
-
 .player-preview .imgbox {
   position: relative;
   width: 100%;
@@ -152,6 +132,7 @@ h1 {
 
 .default-button {
   height: 3rem;
+  width: 7rem;
   border: none;
   border-radius: 5px;
   padding: 0 15px;
@@ -164,10 +145,10 @@ h1 {
 
 .results {
   text-align: center;
-  width: 23.1rem;
+  width: 23.12rem;
   position: absolute;
   margin-top: 5rem;
-  margin-right: 5.79rem;
+  margin-right: 7.65rem;
   z-index: 999;
 }
 
@@ -212,6 +193,7 @@ h1 {
   margin-bottom: 1rem;
   margin-top: 8rem;
   padding-left: 5rem;
+  margin-right: 5rem;
 }
 
 .guess-info {
@@ -226,7 +208,11 @@ h1 {
 }
 
 .guess-input-container {
-  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px; 
+  margin: 0 auto;
 }
 
 .guess-input-container input {
@@ -235,14 +221,16 @@ h1 {
   height: 3rem;
   padding: 0px 0px 0px 10px;
   font-size: 18px;
+  flex: 1;
 }
 
 .guess-results {
+  position: fixed;
   text-align: center;
-  width: 20.6rem;
+  width: 20.65rem;
   position: absolute;
   margin-top: 3rem;
-  margin-right: 4.25rem;
+  margin-right: 7.5rem;
 }
 
 .guess-results ul {
@@ -267,10 +255,10 @@ h1 {
 
 #sound-slider {
   margin-top: 0.8rem;
-  margin-left: 0.5rem;
+  margin-left: 1rem;
   -webkit-appearance: none;
   appearance: none;
-  width: 9rem;
+  width: 6rem;
   height: 10px;
   background: #f2f2f2;
   outline: none;
@@ -331,6 +319,8 @@ h1 {
 .attempts {
   margin-top: 5rem;
   margin-left: 35rem;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .attempts ul{

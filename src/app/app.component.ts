@@ -10,21 +10,11 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AppComponent {
 
+  constructor(private apiRequestService: ApiRequestService, private toastr: ToastrService) { }
+
   wavesurfer!: WaveSurfer;
   isPlaying: boolean = false;
   volume = 0.2;
-
-  togglePlayback(): void {
-    if (this.isPlaying) {
-      this.wavesurfer.pause();
-    } else {
-      this.wavesurfer.play();
-    }
-    this.isPlaying = !this.isPlaying;
-  }
-
-  constructor(private apiRequestService: ApiRequestService, private toastr: ToastrService) { }
-
   title = 'my-app';
   displayVal: string = '';
   searchedValue: any[] = [];
@@ -35,6 +25,12 @@ export class AppComponent {
   id_artist: number | null = null;
   sortedTittle: string = '';
   attempts: { text: string, correct: boolean }[] = [];
+  buttonText = 'Play';
+  maxAttempts = 5;
+  attemptsMade = 0;
+  playDuration = 1;
+  playNext = false;
+  playedSongs: string[] = [];
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('autocompleteList') autocompleteList!: ElementRef<HTMLUListElement>;
@@ -83,9 +79,19 @@ export class AppComponent {
     this.GetArtistData();
   }
 
+  togglePlayback(): void {
+    if (this.isPlaying) {
+      this.wavesurfer.pause();
+    } else {
+      this.wavesurfer.play();
+    }
+    this.isPlaying = !this.isPlaying;
+  }
+
   artistData: any;
   async GetArtistData() {
     try {
+      this.clearAttempts();
       this.volume = 0.1;
       this.updateVolume();
       this.artistData = await this.apiRequestService.searchArtist(this.displayVal);
@@ -107,6 +113,7 @@ export class AppComponent {
             this.GetImageArtist(this.id_artist);
           }
           this.filterSuggestions();
+          this.loadNewSong();
 
           this.isPlaying = false;
           if (this.wavesurfer) {
@@ -142,6 +149,46 @@ export class AppComponent {
       }
     } catch (error) {
       console.error('Erro ao obter os dados do artista:', error);
+    }
+  }
+
+  loadNewSong() {
+    if (this.searchedValue.length > 0) {
+      const availableSongs = this.searchedValue.filter(song => !this.playedSongs.includes(song.title));
+      if (availableSongs.length === 0) {
+        console.log('Todas as músicas já foram tocadas.');
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * availableSongs.length);
+      const newSong = availableSongs[randomIndex];
+
+      this.previewUrl = newSong.preview;
+      this.sortedTittle = newSong.title;
+      this.playedSongs.push(newSong.title);
+
+      this.isPlaying = false;
+      if (this.wavesurfer) {
+        this.wavesurfer.stop();
+        this.wavesurfer.destroy();
+      }
+
+      this.wavesurfer = WaveSurfer.create({
+        container: '#waveform',
+        waveColor: 'rgb(169, 29, 58)',
+        progressColor: 'rgb(70, 17, 17)',
+        barWidth: 2,
+        barGap: 3,
+        barRadius: 2,
+        height: 40,
+        width: 300,
+        interact: false
+      });
+      this.wavesurfer.on('ready', () => {
+        this.togglePlayback();
+      });
+      this.wavesurfer.load(this.previewUrl);
+      this.playAudio();
     }
   }
 
@@ -186,6 +233,22 @@ export class AppComponent {
   checkSelection(selectedTitle: string) {
     const correct = selectedTitle.toLowerCase() === this.getCurrentSongTitle().toLowerCase();
     this.attempts.push({ text: selectedTitle, correct });
+    if (!correct) {
+      this.attemptsMade++;
+      if (this.attemptsMade < this.maxAttempts) {
+        this.playDuration++;
+        this.buttonText = `+${this.playDuration}s`;
+        this.playNext = true;
+      } else {
+        this.buttonText = 'Try again';
+      }
+    } else {
+      this.buttonText = 'New Song';
+    }
+  }
+
+  resetButtonAndDuration() {
+    this.playDuration = 1;
   }
 
   getCurrentSongTitle(): string {
@@ -196,6 +259,32 @@ export class AppComponent {
     if (this.wavesurfer) {
       this.wavesurfer.setVolume(this.volume);
     }
+  }
+
+  playSnippet(): void {
+    if (this.wavesurfer) {
+      this.wavesurfer.stop();
+      this.wavesurfer.seekTo(0);
+      this.wavesurfer.play();
+      setTimeout(() => {
+        this.wavesurfer.pause();
+      }, this.playDuration * 1000);
+      this.playNext = false;
+    }
+    if (this.buttonText === 'New Song' || this.buttonText === 'Try again') {
+      this.buttonText = 'Play';
+      this.loadNewSong();
+      this.playSnippet();
+      this.clearAttempts();
+    }
+
+  }
+
+  clearAttempts() {
+    this.attempts = [];
+    this.attemptsMade = 0;
+    this.playDuration = 1;
+    this.buttonText = 'Play';
   }
 
 }
