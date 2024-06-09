@@ -14,7 +14,7 @@ export class AppComponent {
 
   wavesurfer!: WaveSurfer;
   isPlaying: boolean = false;
-  volume = 0.2;
+  volume = 0.1;
   title = 'my-app';
   displayVal: string = '';
   searchedValue: any[] = [];
@@ -132,6 +132,7 @@ export class AppComponent {
             width: 300,
             interact: false
           });
+          this.wavesurfer.setVolume(0.2);
           this.wavesurfer.on('ready', () => {
             this.togglePlayback();
           });
@@ -184,6 +185,7 @@ export class AppComponent {
         width: 300,
         interact: false
       });
+      this.wavesurfer.setVolume(0.2);
       this.wavesurfer.on('ready', () => {
         this.togglePlayback();
       });
@@ -274,7 +276,6 @@ export class AppComponent {
     if (this.buttonText === 'New Song' || this.buttonText === 'Try again') {
       this.buttonText = 'Play';
       this.loadNewSong();
-      this.playSnippet();
       this.clearAttempts();
     }
 

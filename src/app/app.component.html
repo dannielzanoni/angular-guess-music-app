@@ -3,24 +3,13 @@
 <div class="container">
   <div class="wrapper">
     <div class="search-container">
-      <input
-        type="text"
-        #searchInput
-        (input)="onInput()"
-        (blur)="closeAutocompleteList()"
-        (focus)="openAutocompleteList()"
-        [(ngModel)]="displayVal"
-        placeholder="Type an artist"
-        class="input-value"
-      />
-      <button class="default-button" (click)="GetArtistData()">Search</button>
+      <input type="text" #searchInput (input)="onInput()" (blur)="closeAutocompleteList()"
+        (focus)="openAutocompleteList()" [(ngModel)]="displayVal" placeholder="Type an artist" class="input-value" />
+      <button class="default-button" (click)="GetArtistData()" (click)="updateVolume()">Search</button>
     </div>
     <div class="results">
       <ul *ngIf="showAutocompleteList" #autocompleteList>
-        <li
-          *ngFor="let suggestion of autocompleteSuggestions"
-          (click)="selectSuggestion(suggestion); GetArtistData()"
-        >
+        <li *ngFor="let suggestion of autocompleteSuggestions" (click)="selectSuggestion(suggestion); GetArtistData()">
           {{ suggestion }}
         </li>
       </ul>
@@ -39,35 +28,20 @@
       <div id="waveform" class="audio-player">
         <source [src]="this.previewUrl" type="audio/mpeg" />
       </div>
-      <input
-        type="range"
-        value="0.2"
-        min="0"
-        max="1"
-        step="0.01"
-        [(ngModel)]="volume"
-        (ngModelChange)="updateVolume()"
-        id="sound-slider"
-      />
+      <input type="range" value="0.2" min="0" max="1" step="0.01" [(ngModel)]="volume" (ngModelChange)="updateVolume()"
+        id="sound-slider" />
     </div>
 
     <div class="guess-info">
       <div class="guess-input-container">
-        <input
-          type="text"
-          [(ngModel)]="guessValue"
-          (input)="fetchSuggestions()"
-        />
+        <input type="text" [(ngModel)]="guessValue" (input)="fetchSuggestions()" />
         <button class="default-button" (click)="playSnippet()">
           {{ buttonText }}
         </button>
       </div>
       <div class="guess-results">
         <ul *ngIf="showSuggestions()">
-          <li
-            *ngFor="let suggestion of filteredSuggestions.slice(0, 5)"
-            (click)="checkSelection(suggestion)"
-          >
+          <li *ngFor="let suggestion of filteredSuggestions.slice(0, 5)" (click)="checkSelection(suggestion)">
             {{ suggestion }}
           </li>
         </ul>
@@ -78,10 +52,7 @@
 
 <div class="attempts">
   <ul>
-    <li
-      *ngFor="let attempt of attempts"
-      [ngStyle]="{ color: attempt.correct ? 'green' : 'red' }"
-    >
+    <li *ngFor="let attempt of attempts" [ngStyle]="{ color: attempt.correct ? 'green' : 'red' }">
       {{ attempt.text }}
     </li>
   </ul>
