@@ -34,14 +34,16 @@
 
     <div class="guess-info">
       <div class="guess-input-container">
-        <input #guessInput type="text" [(ngModel)]="guessValue" (input)="fetchSuggestions()" />
+        <input #guessInput type="text" [(ngModel)]="guessValue" (input)="fetchSuggestions()"
+          [disabled]="isGuessInputDisabled" />
         <button class="default-button" (click)="playSnippet()">
-          {{ buttonText }}
+          <span>{{ buttonText }}</span>
         </button>
       </div>
       <div class="guess-results">
         <ul *ngIf="showSuggestions()">
-          <li *ngFor="let suggestion of filteredSuggestions.slice(0, 5)" (click)="checkSelection(suggestion)">
+          <li *ngFor="let suggestion of filteredSuggestions.slice(0, 5)" (click)="checkSelection(suggestion)"
+            [ngClass]="{ 'disabled': isListDisabled }">
             {{ suggestion }}
           </li>
         </ul>
@@ -50,6 +52,7 @@
   </div>
 </div>
 
+<!-- fazer button para adicionar 1segundo quando nao sabe a musica e prefere nao chutar nada -->
 <div class="attempts">
   <ul>
     <li *ngFor="let attempt of attempts" [ngStyle]="{ color: attempt.correct ? 'green' : 'red' }">

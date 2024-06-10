@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ApiRequestService } from './services/api-request.service';
 import WaveSurfer from 'wavesurfer.js';
 import { ToastrService } from 'ngx-toastr';
+import confetti from 'canvas-confetti';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +32,8 @@ export class AppComponent {
   playDuration = 1;
   playNext = false;
   playedSongs: string[] = [];
+  isGuessInputDisabled: boolean = false;
+  isListDisabled: boolean = false;
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('guessInput') guessInput!: ElementRef<HTMLInputElement>;
@@ -154,6 +157,7 @@ export class AppComponent {
 
   loadNewSong() {
     if (this.searchedValue.length > 0) {
+      this.isListDisabled = false;
       const availableSongs = this.searchedValue.filter(song => !this.playedSongs.includes(song.title));
       if (availableSongs.length === 0) {
         console.log('Todas as músicas já foram tocadas.');
@@ -246,12 +250,11 @@ export class AppComponent {
         this.buttonText = 'Try again';
       }
     } else {
+      this.isListDisabled = true;
+      this.isGuessInputDisabled = true;
+      this.launchConfetti();
       this.buttonText = 'New Song';
     }
-  }
-
-  resetButtonAndDuration() {
-    this.playDuration = 1;
   }
 
   getCurrentSongTitle(): string {
@@ -266,6 +269,7 @@ export class AppComponent {
 
   playSnippet(): void {
     if (this.wavesurfer) {
+      this.isListDisabled = false;
       this.wavesurfer.stop();
       this.wavesurfer.seekTo(0);
       this.wavesurfer.play();
@@ -277,8 +281,9 @@ export class AppComponent {
     if (this.buttonText === 'New Song' || this.buttonText === 'Try again') {
       this.buttonText = 'Play';
       this.resetGuessInput();
-      this.loadNewSong();
       this.clearAttempts();
+      this.isGuessInputDisabled = false;
+      this.loadNewSong();
     }
 
   }
@@ -295,4 +300,10 @@ export class AppComponent {
     this.filteredSuggestions = [];
   }
 
+  launchConfetti() {
+    confetti({
+      particleCount: 100,
+      spread: 160
+    });
+  }
 }

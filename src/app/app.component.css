@@ -19,11 +19,6 @@ h1 {
   margin-top: 4rem;
 }
 
-.default-button:hover {
-  background-color: #c73659;
-  color: #fff;
-}
-
 .player-preview .imgbox {
   position: relative;
   width: 100%;
@@ -143,6 +138,11 @@ h1 {
   margin-left: 0.5rem;
 }
 
+.default-button:hover {
+  background-color: #c73659;
+  color: #fff;
+}
+
 .results {
   text-align: center;
   width: 23.12rem;
@@ -211,7 +211,7 @@ h1 {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 600px; 
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -323,11 +323,16 @@ h1 {
   font-weight: bold;
 }
 
-.attempts ul{
+.attempts ul {
   list-style-type: none;
   padding: 0;
 }
 
 .attempts li {
   padding: 5px 0;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }
