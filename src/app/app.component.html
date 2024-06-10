@@ -7,7 +7,7 @@
         (focus)="openAutocompleteList()" [(ngModel)]="displayVal" placeholder="Type an artist" class="input-value" />
       <button class="default-button" (click)="GetArtistData()">Search</button>
     </div>
-    <div class=" results">
+    <div class="results">
       <ul *ngIf="showAutocompleteList" #autocompleteList>
         <li *ngFor="let suggestion of autocompleteSuggestions" (click)="selectSuggestion(suggestion); GetArtistData()">
           {{ suggestion }}
@@ -28,6 +28,7 @@
       <div id="waveform" class="audio-player">
         <source [src]="this.previewUrl" type="audio/mpeg" />
       </div>
+      <img [src]="soundIcon" style="width: 1.5rem; height: 1.5rem; margin-left: 1rem;">
       <input type="range" value="0.2" min="0" max="1" step="0.01" [(ngModel)]="volume" (ngModelChange)="updateVolume()"
         id="sound-slider" />
     </div>
@@ -38,6 +39,9 @@
           [disabled]="isGuessInputDisabled" />
         <button class="default-button" (click)="playSnippet()">
           <span>{{ buttonText }}</span>
+        </button>
+        <button class="default-button" (click)="skipOneSecond()" [disabled]="isGuessInputDisabled">
+          <span> Skip (+1s)</span>
         </button>
       </div>
       <div class="guess-results">
@@ -51,8 +55,8 @@
     </div>
   </div>
 </div>
-
-<!-- fazer button para adicionar 1segundo quando nao sabe a musica e prefere nao chutar nada -->
+<!-- fazer ficar responsivo -->
+<!-- fazer ficar organizado estrutura e componentes -->
 <div class="attempts">
   <ul>
     <li *ngFor="let attempt of attempts" [ngStyle]="{ color: attempt.correct ? 'green' : 'red' }">

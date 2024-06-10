@@ -192,26 +192,19 @@ h1 {
   justify-content: center;
   margin-bottom: 1rem;
   margin-top: 8rem;
-  padding-left: 5rem;
+  padding-left: 6.5rem;
   margin-right: 5rem;
 }
 
 .guess-info {
-  display: flex;
+  display: block;
   flex-direction: column;
-  align-items: center;
-}
-
-.guess-info {
-  display: flex;
   align-items: center;
 }
 
 .guess-input-container {
   display: flex;
-  align-items: center;
   width: 100%;
-  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -220,6 +213,7 @@ h1 {
   border: none;
   height: 3rem;
   padding: 0px 0px 0px 10px;
+  margin-left: 7rem;
   font-size: 18px;
   flex: 1;
 }
@@ -227,10 +221,9 @@ h1 {
 .guess-results {
   position: fixed;
   text-align: center;
-  width: 20.65rem;
+  width: 20.6rem;
   position: absolute;
-  margin-top: 3rem;
-  margin-right: 7.5rem;
+  margin-left: 7rem;
 }
 
 .guess-results ul {
@@ -259,7 +252,7 @@ h1 {
   -webkit-appearance: none;
   appearance: none;
   width: 6rem;
-  height: 10px;
+  height: 5px;
   background: #f2f2f2;
   outline: none;
   transition: opacity 0.2s ease, background 0.2s ease;
@@ -274,9 +267,9 @@ h1 {
 #sound-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 15px;
-  height: 15px;
-  background: #a91d3a;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
   cursor: pointer;
   border-radius: 50%;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
@@ -335,4 +328,86 @@ h1 {
 .disabled {
   pointer-events: none;
   opacity: 0.5;
+}
+
+@media screen and (max-width: 768px) {
+  body,
+  html {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+  }
+  .container {
+    overflow: hidden;
+    width: 100vw;
+    display: block;
+    background-image: none;
+  }
+  .input-value {
+    width: 12rem;
+    padding: 0px 0px 0px 0px;
+  }
+  .results {
+    width: 15rem;
+  }
+  .panel {
+    width: 100vw;
+    display: block;
+    margin: 0 0;
+  }
+  .player-preview {
+    display: block;
+  }
+  .player-preview .imgbox {
+    height: 15rem;
+    width: 15rem;
+  }
+  .player-preview .imgbox img {
+    position: absolute;
+    left: 42%;
+    top: 28%;
+    margin: 0;
+    padding: 0;
+    margin-top: 0rem;
+    width: 12rem;
+    height: 12rem;
+  }
+  .guess-container {
+    margin: 0rem 0rem;
+    padding: 0rem 0rem;
+    margin-left: 0rem;
+    margin-right: 0rem;
+  }
+
+  .guess-info {
+    display: block;
+    width: 11rem;
+    margin-top: 1rem;
+    margin-left: -3rem;
+  }
+  .guess-input-container input {
+    width: 15rem;
+    margin: 0 0;
+    padding: 0px 0px 0px 0px;
+  }
+  .guess-results {
+    width: 12.6rem;
+    margin-left: 9.1rem;
+  }
+  .attempts {
+    width: 100vw;
+    margin-top: 3rem;
+    margin-left: 0rem;
+  }
+  .attempts li {
+    padding: 5px 0px;
+  }
+  #sound-slider {
+    margin-left: 0rem;
+    margin-top: 0rem;
+    width: 4rem;
+    margin-top: 0.8rem;
+  }
 }

@@ -34,6 +34,7 @@ export class AppComponent {
   playedSongs: string[] = [];
   isGuessInputDisabled: boolean = false;
   isListDisabled: boolean = false;
+  soundIcon: string = '../assets/sound.png';
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('guessInput') guessInput!: ElementRef<HTMLInputElement>;
@@ -244,7 +245,7 @@ export class AppComponent {
       this.attemptsMade++;
       if (this.attemptsMade < this.maxAttempts) {
         this.playDuration++;
-        this.buttonText = `+${this.playDuration}s`;
+        this.buttonText = `Play (+${this.playDuration}s)`;
         this.playNext = true;
       } else {
         this.buttonText = 'Try again';
@@ -256,12 +257,30 @@ export class AppComponent {
       this.buttonText = 'New Song';
     }
   }
+  skipOneSecond(): void {
+    if (this.wavesurfer && this.playDuration < 5) {
+      this.playDuration++;
+      this.buttonText = `Play (+${this.playDuration}s)`;
+      this.playNext = true;
+      this.attempts.push({ text: '[Skipped]', correct: false });
+    } else {
+      this.buttonText = 'Try again';
+    }
+  }
 
   getCurrentSongTitle(): string {
     return this.sortedTittle;
   }
 
   updateVolume(): void {
+    if (this.volume === 0) {
+      this.soundIcon = "../assets/mute.png";
+    } else if (this.volume > 0.05 && this.volume < 0.50) {
+      this.soundIcon = "../assets/sound.png";
+    } else if (this.volume > 0.50) {
+      this.soundIcon = "../assets/sound2.png";
+    }
+
     if (this.wavesurfer) {
       this.wavesurfer.setVolume(this.volume);
     }
@@ -306,4 +325,5 @@ export class AppComponent {
       spread: 160
     });
   }
+
 }
