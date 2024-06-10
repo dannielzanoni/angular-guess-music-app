@@ -33,6 +33,7 @@ export class AppComponent {
   playedSongs: string[] = [];
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('guessInput') guessInput!: ElementRef<HTMLInputElement>;
   @ViewChild('autocompleteList') autocompleteList!: ElementRef<HTMLUListElement>;
 
   async onInput() {
@@ -92,10 +93,8 @@ export class AppComponent {
   async GetArtistData() {
     try {
       this.clearAttempts();
-      this.volume = 0.1;
-      this.updateVolume();
       this.artistData = await this.apiRequestService.searchArtist(this.displayVal);
-      console.log('Dados do artista:', this.artistData);
+      // console.log('Dados do artista:', this.artistData);
       if (this.artistData.data.length > 0) {
         const songsByArtist = this.artistData.data.filter((item: any) => item.artist.name.toLowerCase() === this.displayVal.toLowerCase());
 
@@ -186,9 +185,11 @@ export class AppComponent {
         interact: false
       });
       this.wavesurfer.setVolume(0.2);
+
       this.wavesurfer.on('ready', () => {
         this.togglePlayback();
       });
+
       this.wavesurfer.load(this.previewUrl);
       this.playAudio();
     }
@@ -275,6 +276,7 @@ export class AppComponent {
     }
     if (this.buttonText === 'New Song' || this.buttonText === 'Try again') {
       this.buttonText = 'Play';
+      this.resetGuessInput();
       this.loadNewSong();
       this.clearAttempts();
     }
@@ -286,6 +288,11 @@ export class AppComponent {
     this.attemptsMade = 0;
     this.playDuration = 1;
     this.buttonText = 'Play';
+  }
+
+  resetGuessInput() {
+    this.guessValue = '';
+    this.filteredSuggestions = [];
   }
 
 }

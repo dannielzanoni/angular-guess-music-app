@@ -5,9 +5,9 @@
     <div class="search-container">
       <input type="text" #searchInput (input)="onInput()" (blur)="closeAutocompleteList()"
         (focus)="openAutocompleteList()" [(ngModel)]="displayVal" placeholder="Type an artist" class="input-value" />
-      <button class="default-button" (click)="GetArtistData()" (click)="updateVolume()">Search</button>
+      <button class="default-button" (click)="GetArtistData()">Search</button>
     </div>
-    <div class="results">
+    <div class=" results">
       <ul *ngIf="showAutocompleteList" #autocompleteList>
         <li *ngFor="let suggestion of autocompleteSuggestions" (click)="selectSuggestion(suggestion); GetArtistData()">
           {{ suggestion }}
@@ -34,7 +34,7 @@
 
     <div class="guess-info">
       <div class="guess-input-container">
-        <input type="text" [(ngModel)]="guessValue" (input)="fetchSuggestions()" />
+        <input #guessInput type="text" [(ngModel)]="guessValue" (input)="fetchSuggestions()" />
         <button class="default-button" (click)="playSnippet()">
           {{ buttonText }}
         </button>
