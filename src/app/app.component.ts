@@ -124,18 +124,7 @@ export class AppComponent {
             this.wavesurfer.destroy();
           }
 
-          this.wavesurfer = WaveSurfer.create({
-            container: '#waveform',
-            waveColor: 'rgb(169, 29, 58)',
-            progressColor: 'rgb(70, 17, 17)',
-            barWidth: 2,
-            barGap: 3,
-            barRadius: 2,
-            height: 40,
-            width: 300,
-            interact: false
-          });
-          this.wavesurfer.setVolume(0.2);
+          this.wavesurfer = this.createWaveSurfer();
           this.wavesurfer.on('ready', () => {
             this.togglePlayback();
           });
@@ -178,18 +167,7 @@ export class AppComponent {
         this.wavesurfer.destroy();
       }
 
-      this.wavesurfer = WaveSurfer.create({
-        container: '#waveform',
-        waveColor: 'rgb(169, 29, 58)',
-        progressColor: 'rgb(70, 17, 17)',
-        barWidth: 2,
-        barGap: 3,
-        barRadius: 2,
-        height: 40,
-        width: 300,
-        interact: false
-      });
-      this.wavesurfer.setVolume(0.2);
+      this.wavesurfer = this.createWaveSurfer();
 
       this.wavesurfer.on('ready', () => {
         this.togglePlayback();
@@ -198,6 +176,20 @@ export class AppComponent {
       this.wavesurfer.load(this.previewUrl);
       this.playAudio();
     }
+  }
+
+  createWaveSurfer(): WaveSurfer {
+    return WaveSurfer.create({
+      container: '#waveform',
+      waveColor: 'rgb(169, 29, 58)',
+      progressColor: 'rgb(70, 17, 17)',
+      barWidth: 2,
+      barGap: 3,
+      barRadius: 2,
+      height: 40,
+      width: 300,
+      interact: false
+    });
   }
 
   playAudio() {
