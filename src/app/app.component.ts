@@ -259,11 +259,13 @@ export class AppComponent {
   }
   skipOneSecond(): void {
     if (this.wavesurfer && this.playDuration < 5) {
+      this.attemptsMade++;
       this.playDuration++;
       this.buttonText = `Play (+${this.playDuration}s)`;
       this.playNext = true;
       this.attempts.push({ text: '[Skipped]', correct: false });
     } else {
+      this.isListDisabled = true;
       this.buttonText = 'Try again';
     }
   }
