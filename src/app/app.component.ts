@@ -286,6 +286,7 @@ export class AppComponent {
       this.wavesurfer.stop();
       this.wavesurfer.seekTo(0);
       this.wavesurfer.play();
+      this.wavesurfer.setVolume(this.volume);
       setTimeout(() => {
         this.wavesurfer.pause();
       }, this.playDuration * 1000);
