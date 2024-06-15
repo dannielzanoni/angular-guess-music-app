@@ -97,6 +97,9 @@ export class AppComponent {
   async GetArtistData() {
     try {
       this.clearAttempts();
+      if (this.isGuessInputDisabled) {
+        this.isGuessInputDisabled = false;
+      }
       this.artistData = await this.apiRequestService.searchArtist(this.displayVal);
       // console.log('Dados do artista:', this.artistData);
       if (this.artistData.data.length > 0) {
