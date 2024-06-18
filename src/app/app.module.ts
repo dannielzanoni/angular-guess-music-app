@@ -6,10 +6,12 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { MusicPlayerComponent } from './music-player/music-player.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MusicPlayerComponent
   ],
   imports: [
     BrowserModule,
