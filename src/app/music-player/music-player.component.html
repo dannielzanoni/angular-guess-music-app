@@ -1,20 +1,22 @@
-<h1>Guess The Music</h1>
-<br />
-<div class="container">
-    <div class="wrapper">
-        <div class="search-container">
-            <input type="text" #searchInput (input)="onInput()" (blur)="closeAutocompleteList()"
-                (focus)="openAutocompleteList()" [(ngModel)]="displayVal" placeholder="Type an artist"
-                class="input-value" />
-            <button class="default-button" (click)="GetArtistData()">Search</button>
-        </div>
-        <div class="results">
-            <ul *ngIf="showAutocompleteList" #autocompleteList>
-                <li *ngFor="let suggestion of autocompleteSuggestions"
-                    (click)="selectSuggestion(suggestion); GetArtistData()">
-                    {{ suggestion }}
-                </li>
-            </ul>
+<div class="searchbar">
+    <h1>Guess The Music</h1>
+    <br />
+    <div class="container">
+        <div class="wrapper">
+            <div class="search-container">
+                <input type="text" #searchInput (input)="onInput()" (blur)="closeAutocompleteList()"
+                    (focus)="openAutocompleteList()" [(ngModel)]="displayVal" placeholder="Type an artist"
+                    class="input-value" />
+                <button class="default-button" (click)="GetArtistData()">Search</button>
+            </div>
+            <div class="results">
+                <ul *ngIf="showAutocompleteList" #autocompleteList>
+                    <li *ngFor="let suggestion of autocompleteSuggestions"
+                        (click)="selectSuggestion(suggestion); GetArtistData()">
+                        {{ suggestion }}
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -22,7 +24,8 @@
 <div class="panel">
     <div class="player-preview" *ngIf="previewUrl">
         <div class="imgbox">
-            <img class="imagem-controller" />
+            <img class="image-controller" />
+            <img class="reflection">
         </div>
     </div>
     <div class="guess" *ngIf="previewUrl">
@@ -57,6 +60,7 @@
         </div>
     </div>
 </div>
+
 <div class="attempts">
     <ul>
         <li *ngFor="let attempt of attempts" [ngStyle]="{ color: attempt.correct ? 'green' : 'red' }">

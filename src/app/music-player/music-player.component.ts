@@ -11,12 +11,10 @@ import confetti from 'canvas-confetti';
 })
 export class MusicPlayerComponent {
 
-  constructor(private apiRequestService: ApiRequestService, private toastr: ToastrService) { }
-
   wavesurfer!: WaveSurfer;
   isPlaying: boolean = false;
   volume = 0.1;
-  title = 'my-app';
+  title = 'guess-the-music';
   displayVal: string = '';
   searchedValue: any[] = [];
   guessValue: string = '';
@@ -35,6 +33,13 @@ export class MusicPlayerComponent {
   isGuessInputDisabled: boolean = false;
   isListDisabled: boolean = false;
   soundIcon: string = '../assets/sound.png';
+  artists_list: any;
+  autocompleteSuggestions: string[] = [];
+  showAutocompleteList: boolean = false;
+  artistData: any;
+  image: any;
+
+  constructor(private apiRequestService: ApiRequestService, private toastr: ToastrService) { }
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('guessInput') guessInput!: ElementRef<HTMLInputElement>;
@@ -44,10 +49,6 @@ export class MusicPlayerComponent {
     const inputValue = this.searchInput.nativeElement.value;
     this.autocompleteSearch(inputValue);
   }
-
-  artists_list: any;
-  autocompleteSuggestions: string[] = [];
-  showAutocompleteList: boolean = false;
 
   async autocompleteSearch(inputValue: string) {
     if (inputValue.length < 2) {
@@ -93,7 +94,6 @@ export class MusicPlayerComponent {
     this.isPlaying = !this.isPlaying;
   }
 
-  artistData: any;
   async GetArtistData() {
     try {
       this.clearAttempts();
@@ -101,25 +101,24 @@ export class MusicPlayerComponent {
         this.isGuessInputDisabled = false;
       }
       this.artistData = await this.apiRequestService.searchArtist(this.displayVal);
-      // console.log('Dados do artista:', this.artistData);
+
       if (this.artistData.data.length > 0) {
         const songsByArtist = this.artistData.data.filter((item: any) => item.artist.name.toLowerCase() === this.displayVal.toLowerCase());
 
         if (songsByArtist.length > 0) {
-          //draw music
           const randomIndex = Math.floor(Math.random() * songsByArtist.length);
           this.previewUrl = songsByArtist[randomIndex].preview;
           this.sortedTittle = songsByArtist[randomIndex].title;
           this.searchedValue = songsByArtist;
 
-          //title for suggestions
           this.suggestions = songsByArtist.map((item: any) => item.title);
           this.id_artist = songsByArtist.find((item: any) => !!item.artist.id)?.artist.id || null;
+
           if (this.id_artist !== null) {
             this.GetImageArtist(this.id_artist);
           }
+
           this.filterSuggestions();
-          this.loadNewSong();
 
           this.isPlaying = false;
           if (this.wavesurfer) {
@@ -134,26 +133,28 @@ export class MusicPlayerComponent {
           this.wavesurfer.load(this.previewUrl);
           this.playAudio();
         } else {
-          console.log('Não foram encontradas músicas do artista pesquisado.');
+          console.log('no songs found of the artist.');
         }
       } else {
-        console.log('Nenhum resultado encontrado.');
+        console.log('no songs found.');
         this.previewUrl = '';
         this.searchedValue = [];
         this.suggestions = [];
         this.filteredSuggestions = [];
       }
     } catch (error) {
-      console.error('Erro ao obter os dados do artista:', error);
+      console.error('error getting artist data:', error);
     }
   }
 
   loadNewSong() {
     if (this.searchedValue.length > 0) {
       this.isListDisabled = false;
+
       const availableSongs = this.searchedValue.filter(song => !this.playedSongs.includes(song.title));
+
       if (availableSongs.length === 0) {
-        console.log('Todas as músicas já foram tocadas.');
+        console.log('All songs were played.');
         return;
       }
 
@@ -171,12 +172,11 @@ export class MusicPlayerComponent {
       }
 
       this.wavesurfer = this.createWaveSurfer();
-
       this.wavesurfer.on('ready', () => {
         this.togglePlayback();
       });
-
       this.wavesurfer.load(this.previewUrl);
+
       this.playAudio();
     }
   }
@@ -203,13 +203,14 @@ export class MusicPlayerComponent {
     }
   }
 
-  image: any;
   async GetImageArtist(id_artist: number) {
     try {
       this.image = await this.apiRequestService.getImage(id_artist);
       const response = this.image;
-      const imageElement = document.querySelector('.imagem-controller') as HTMLImageElement;
+      const imageElement = document.querySelector('.image-controller') as HTMLImageElement;
+      const reflectionElement = document.querySelector('.reflection') as HTMLImageElement;
       imageElement.src = response;
+      reflectionElement.src = response;
     } catch (error) {
       console.error(error);
     }
@@ -252,6 +253,7 @@ export class MusicPlayerComponent {
       this.buttonText = 'New Song';
     }
   }
+
   skipOneSecond(): void {
     if (this.wavesurfer && this.playDuration < 5) {
       this.attemptsMade++;
@@ -302,7 +304,6 @@ export class MusicPlayerComponent {
       this.isGuessInputDisabled = false;
       this.loadNewSong();
     }
-
   }
 
   clearAttempts() {
