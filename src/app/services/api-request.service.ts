@@ -22,8 +22,8 @@ export class ApiRequestService {
 
     try {
       const response = await axios.request(options);
-      console.log('usando services');
-      console.log(response.data);
+      // console.log('usando services');
+      // console.log(response.data);
       return response.data;
     } catch (error) {
       throw error;
@@ -85,7 +85,7 @@ export class ApiRequestService {
       }).slice(0, 5);
 
       this.autocompleteSuggestions = artistNames;
-      console.log(this.autocompleteSuggestions);
+      // console.log(this.autocompleteSuggestions);
       return this.autocompleteSuggestions;
 
     } catch (error) {

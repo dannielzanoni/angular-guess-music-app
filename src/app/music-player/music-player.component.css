@@ -1,6 +1,15 @@
 * {
-  font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+  font-family:
+    "Inter Tight",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
     "Segoe UI Symbol";
 }
 
@@ -13,46 +22,62 @@ h1 {
   line-height: 100%;
   letter-spacing: -0.125rem;
   margin: 0;
-  font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+  font-family:
+    "Inter Tight",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
     "Segoe UI Symbol";
   margin-top: 4rem;
 }
 
-.player-preview .imgbox {
-  position: relative;
-  width: 100%;
-  height: 17rem;
-}
-
 .player-preview {
+  margin-top: 3rem;
+  margin-left: -20rem;
+}
+.imgbox {
   position: relative;
 }
 
-.player-preview .imgbox img {
-  position: fixed;
-  top: 24%;
-  left: 30%;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background-color: #1f1f23;
-  margin: 0;
-  padding: 0;
-  flex-direction: column;
-  margin-top: 4rem;
-  justify-content: center;
-  align-items: center;
-  width: 20rem;
-  height: 17rem;
-  border-radius: 20px;
-  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.5);
-  box-sizing: border-box;
-  background-color: #1f1f23;
+.image-controller {
+  width: 18rem;
+  height: 18rem;
+  display: block;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+
+.reflection {
+  width: 18rem;
+  height: 18rem;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  height: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  transform: scaleY(-1);
+  opacity: 0.4;
+  mask-image: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0) 40%
+  );
 }
 
 .autocomplete-list {
@@ -255,7 +280,9 @@ h1 {
   height: 5px;
   background: #f2f2f2;
   outline: none;
-  transition: opacity 0.2s ease, background 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    background 0.2s ease;
   border-radius: 5px;
 }
 
@@ -288,7 +315,9 @@ h1 {
   cursor: pointer;
   border-radius: 50%;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  transition: background 0.2s ease, transform 0.5s ease;
+  transition:
+    background 0.2s ease,
+    transform 0.5s ease;
 }
 
 #sound-slider::-moz-range-thumb:hover {
@@ -328,86 +357,4 @@ h1 {
 .disabled {
   pointer-events: none;
   opacity: 0.5;
-}
-
-@media screen and (max-width: 768px) {
-  body,
-  html {
-    overflow-x: hidden;
-    overflow-y: hidden;
-    overflow: hidden;
-    width: 100vw;
-    height: 100vh;
-  }
-  .container {
-    overflow: hidden;
-    width: 100vw;
-    display: block;
-    background-image: none;
-  }
-  .input-value {
-    width: 12rem;
-    padding: 0px 0px 0px 0px;
-  }
-  .results {
-    width: 15rem;
-  }
-  .panel {
-    width: 100vw;
-    display: block;
-    margin: 0 0;
-  }
-  .player-preview {
-    display: block;
-  }
-  .player-preview .imgbox {
-    height: 15rem;
-    width: 15rem;
-  }
-  .player-preview .imgbox img {
-    position: absolute;
-    left: 42%;
-    top: 28%;
-    margin: 0;
-    padding: 0;
-    margin-top: 0rem;
-    width: 12rem;
-    height: 12rem;
-  }
-  .guess-container {
-    margin: 0rem 0rem;
-    padding: 0rem 0rem;
-    margin-left: 0rem;
-    margin-right: 0rem;
-  }
-
-  .guess-info {
-    display: block;
-    width: 11rem;
-    margin-top: 1rem;
-    margin-left: -3rem;
-  }
-  .guess-input-container input {
-    width: 15rem;
-    margin: 0 0;
-    padding: 0px 0px 0px 0px;
-  }
-  .guess-results {
-    width: 12.6rem;
-    margin-left: 9.1rem;
-  }
-  .attempts {
-    width: 100vw;
-    margin-top: 3rem;
-    margin-left: 0rem;
-  }
-  .attempts li {
-    padding: 5px 0px;
-  }
-  #sound-slider {
-    margin-left: 0rem;
-    margin-top: 0rem;
-    width: 4rem;
-    margin-top: 0.8rem;
-  }
 }
