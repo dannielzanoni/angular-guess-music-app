@@ -1,7 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ApiRequestService } from '../services/api-request.service';
 import WaveSurfer from 'wavesurfer.js';
-import { ToastrService } from 'ngx-toastr';
 import confetti from 'canvas-confetti';
 
 @Component({
@@ -10,6 +9,8 @@ import confetti from 'canvas-confetti';
   styleUrl: './music-player.component.css'
 })
 export class MusicPlayerComponent {
+
+  //#region Variables
 
   wavesurfer!: WaveSurfer;
   isPlaying: boolean = false;
@@ -38,8 +39,11 @@ export class MusicPlayerComponent {
   showAutocompleteList: boolean = false;
   artistData: any;
   image: any;
+  attemptMade: boolean = false;
 
-  constructor(private apiRequestService: ApiRequestService, private toastr: ToastrService) { }
+  //#endregion
+
+  constructor(private apiRequestService: ApiRequestService) { }
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('guessInput') guessInput!: ElementRef<HTMLInputElement>;
@@ -85,14 +89,7 @@ export class MusicPlayerComponent {
     this.GetArtistData();
   }
 
-  togglePlayback(): void {
-    if (this.isPlaying) {
-      this.wavesurfer.pause();
-    } else {
-      this.wavesurfer.play();
-    }
-    this.isPlaying = !this.isPlaying;
-  }
+  //#region Get Data
 
   async GetArtistData() {
     try {
@@ -147,7 +144,21 @@ export class MusicPlayerComponent {
     }
   }
 
+  async GetImageArtist(id_artist: number) {
+    try {
+      this.image = await this.apiRequestService.getImage(id_artist);
+      const response = this.image;
+      const imageElement = document.querySelector('.image-controller') as HTMLImageElement;
+      const reflectionElement = document.querySelector('.reflection') as HTMLImageElement;
+      imageElement.src = response;
+      reflectionElement.src = response;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   loadNewSong() {
+    this.attemptMade = false;
     if (this.searchedValue.length > 0) {
       this.isListDisabled = false;
 
@@ -181,6 +192,53 @@ export class MusicPlayerComponent {
     }
   }
 
+  //#endregion
+
+  //#region Game Logic
+
+  checkSelection(selectedTitle: string) {
+    this.attemptMade = true;
+    const correct = selectedTitle.toLowerCase() === this.getCurrentSongTitle().toLowerCase();
+    this.attempts.push({ text: selectedTitle, correct });
+    if (!correct) {
+      this.attemptsMade++;
+      if (this.attemptsMade < this.maxAttempts) {
+        this.playDuration++;
+        this.buttonText = `Play (+${this.playDuration}s)`;
+        this.playNext = true;
+      } else {
+        this.isListDisabled = true;
+        this.isGuessInputDisabled = true;
+        this.attempts.push({ text: this.getCurrentSongTitle(), correct });
+        this.buttonText = 'Try again';
+      }
+    } else {
+      this.launchConfetti();
+      this.isListDisabled = true;
+      this.isGuessInputDisabled = true;
+      this.buttonText = 'New Song';
+    }
+  }
+
+  skipOneSecond(): void {
+    this.attemptMade = true;
+    if (this.wavesurfer && this.playDuration < 5) {
+      this.attemptsMade++;
+      this.playDuration++;
+      this.buttonText = `Play (+${this.playDuration}s)`;
+      this.playNext = true;
+      this.attempts.push({ text: "Skipped +1s", correct: false });
+    } else {
+      this.isGuessInputDisabled = true;
+      this.isListDisabled = true;
+      this.buttonText = 'Try again';
+    }
+  }
+
+  //#endregion 
+
+  //#region Music Setup
+
   createWaveSurfer(): WaveSurfer {
     return WaveSurfer.create({
       container: '#waveform',
@@ -195,80 +253,21 @@ export class MusicPlayerComponent {
     });
   }
 
+  togglePlayback(): void {
+    if (this.isPlaying) {
+      this.wavesurfer.pause();
+    } else {
+      this.wavesurfer.play();
+    }
+    this.isPlaying = !this.isPlaying;
+  }
+
   playAudio() {
     if (this.wavesurfer) {
       this.wavesurfer.on('ready', () => {
         this.togglePlayback();
       });
     }
-  }
-
-  async GetImageArtist(id_artist: number) {
-    try {
-      this.image = await this.apiRequestService.getImage(id_artist);
-      const response = this.image;
-      const imageElement = document.querySelector('.image-controller') as HTMLImageElement;
-      const reflectionElement = document.querySelector('.reflection') as HTMLImageElement;
-      imageElement.src = response;
-      reflectionElement.src = response;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  fetchSuggestions() {
-    this.filterSuggestions();
-  }
-
-  filterSuggestions() {
-    this.filteredSuggestions = this.suggestions
-      .filter((suggestion, index, self) =>
-        index === self.findIndex((s) => s.toLowerCase() === suggestion.toLowerCase())
-      )
-      .filter(suggestion =>
-        suggestion.toLowerCase().includes(this.guessValue.toLowerCase())
-      );
-  }
-
-  showSuggestions(): boolean {
-    return this.filteredSuggestions.length > 0 && this.guessValue.length > 0;
-  }
-
-  checkSelection(selectedTitle: string) {
-    const correct = selectedTitle.toLowerCase() === this.getCurrentSongTitle().toLowerCase();
-    this.attempts.push({ text: selectedTitle, correct });
-    if (!correct) {
-      this.attemptsMade++;
-      if (this.attemptsMade < this.maxAttempts) {
-        this.playDuration++;
-        this.buttonText = `Play (+${this.playDuration}s)`;
-        this.playNext = true;
-      } else {
-        this.buttonText = 'Try again';
-      }
-    } else {
-      this.isListDisabled = true;
-      this.isGuessInputDisabled = true;
-      this.launchConfetti();
-      this.buttonText = 'New Song';
-    }
-  }
-
-  skipOneSecond(): void {
-    if (this.wavesurfer && this.playDuration < 5) {
-      this.attemptsMade++;
-      this.playDuration++;
-      this.buttonText = `Play (+${this.playDuration}s)`;
-      this.playNext = true;
-      this.attempts.push({ text: '[Skipped]', correct: false });
-    } else {
-      this.isListDisabled = true;
-      this.buttonText = 'Try again';
-    }
-  }
-
-  getCurrentSongTitle(): string {
-    return this.sortedTittle;
   }
 
   updateVolume(): void {
@@ -306,6 +305,34 @@ export class MusicPlayerComponent {
     }
   }
 
+  //#endregion
+
+  //#region Suggestions
+
+  fetchSuggestions() {
+    this.filterSuggestions();
+  }
+
+  filterSuggestions() {
+    this.filteredSuggestions = this.suggestions
+      .filter((suggestion, index, self) =>
+        index === self.findIndex((s) => s.toLowerCase() === suggestion.toLowerCase())
+      )
+      .filter(suggestion =>
+        suggestion.toLowerCase().includes(this.guessValue.toLowerCase())
+      );
+  }
+
+  showSuggestions(): boolean {
+    return this.filteredSuggestions.length > 0 && this.guessValue.length > 0;
+  }
+
+  //#endregion
+
+  getCurrentSongTitle(): string {
+    return this.sortedTittle;
+  }
+
   clearAttempts() {
     this.attempts = [];
     this.attemptsMade = 0;
@@ -321,7 +348,16 @@ export class MusicPlayerComponent {
   launchConfetti() {
     confetti({
       particleCount: 100,
-      spread: 160
+      spread: 70,
+      origin: { y: 0.6 },
+      zIndex: 1000
     });
+
+    setTimeout(() => {
+      const canvas = document.querySelector('canvas');
+      if (canvas) {
+        canvas.remove();
+      }
+    }, 5000);
   }
 }
