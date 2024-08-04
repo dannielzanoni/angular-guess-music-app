@@ -7,11 +7,15 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { MusicPlayerComponent } from './music-player/music-player.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { HowToPlayComponent } from './how-to-play/how-to-play.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MusicPlayerComponent
+    MusicPlayerComponent,
+    NavbarComponent,
+    HowToPlayComponent
   ],
   imports: [
     BrowserModule,

@@ -1,70 +1,138 @@
 <div class="searchbar">
     <h1>Guess The Music</h1>
     <br />
+    <style>
+        .search-container {
+            position: relative;
+            width: 30rem;
+        }
+
+        .list-group {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+    </style>
+
     <div class="container">
         <div class="wrapper">
             <div class="search-container">
-                <input type="text" #searchInput (input)="onInput()" (blur)="closeAutocompleteList()"
-                    (focus)="openAutocompleteList()" [(ngModel)]="displayVal" placeholder="Type an artist"
-                    class="input-value" />
-                <button class="default-button" (click)="GetArtistData()">Search</button>
-            </div>
-            <div class="results">
-                <ul *ngIf="showAutocompleteList" #autocompleteList>
-                    <li *ngFor="let suggestion of autocompleteSuggestions"
+                <div class="input-group">
+                    <input type="text" #searchInput (input)="onInput()" (blur)="closeAutocompleteList()"
+                        (focus)="openAutocompleteList()" [(ngModel)]="displayVal" placeholder="Type an artist, band..."
+                        class="form-control inputSearch" />
+                    <button class="default-button btn-primary" (click)="GetArtistData()">Search</button>
+                </div>
+                <div class="list-group" *ngIf="showAutocompleteList" #autocompleteList>
+                    <a href="#" class="list-group-item list-group-item-action"
+                        *ngFor="let suggestion of autocompleteSuggestions"
                         (click)="selectSuggestion(suggestion); GetArtistData()">
                         {{ suggestion }}
-                    </li>
-                </ul>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="panel">
-    <div class="player-preview" *ngIf="previewUrl">
-        <div class="imgbox">
-            <img class="image-controller" />
-            <img class="reflection">
-        </div>
-    </div>
-    <div class="guess" *ngIf="previewUrl">
-        <div class="guess-container">
-            <div id="waveform" class="audio-player">
-                <source [src]="this.previewUrl" type="audio/mpeg" />
-            </div>
-            <img [src]="soundIcon" style="width: 1.5rem; height: 1.5rem; margin-left: 1rem;">
-            <input type="range" value="0.2" min="0" max="1" step="0.01" [(ngModel)]="volume"
-                (ngModelChange)="updateVolume()" id="sound-slider" />
-        </div>
+<style>
+    .input-group-container {
+        position: relative;
+        width: 25rem;
+    }
 
-        <div class="guess-info">
-            <div class="guess-input-container">
-                <input #guessInput type="text" [(ngModel)]="guessValue" (input)="fetchSuggestions()"
-                    [disabled]="isGuessInputDisabled" />
-                <button class="default-button" (click)="playSnippet()">
-                    <span>{{ buttonText }}</span>
-                </button>
-                <button class="default-button" (click)="skipOneSecond()" [disabled]="isGuessInputDisabled">
-                    <span> Skip (+1s)</span>
-                </button>
+    .list-group {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .btn-fixed-size {
+        width: 6.5rem;
+        color: white;
+        background-color: #DC3545;
+        transition: none;
+    }
+
+    .btn {
+        background-color: #DC3545;
+        border: none;
+        color: #fff;
+        transition: none;
+    }
+
+    span {
+        background-color: #DC3545;
+    }
+
+    .btn:hover span {
+        background-color: #79021d;
+    }
+
+    .btn:hover {
+        background-color: #79021d;
+    }
+</style>
+
+<div class="container col-xxl-8 px-4 py-5" *ngIf="this.previewUrl">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-15 col-sm-12 col-lg-6">
+            <div>
+                <div id="waveform" class="audio-player">
+                    <source [src]="this.previewUrl" type="audio/mpeg" />
+                </div>
+                <div class="sound">
+                    <img [src]="soundIcon" style="width: 1.5rem; height: 1.5rem;">
+                    <input type="range" value="0.2" min="0" max="1" step="0.01" [(ngModel)]="volume"
+                        (ngModelChange)="updateVolume()" id="sound-slider" />
+                </div>
             </div>
-            <div class="guess-results">
-                <ul *ngIf="showSuggestions()">
-                    <li *ngFor="let suggestion of filteredSuggestions.slice(0, 5)" (click)="checkSelection(suggestion)"
+
+            <div class="input-group-container">
+                <div class="input-group mb-5">
+                    <input #guessInput type="text" [(ngModel)]="guessValue" (input)="fetchSuggestions()"
+                        [disabled]="isGuessInputDisabled" class="form-control" />
+                    <button class="btn btn-fixed-size" (click)="playSnippet()">
+                        <span>{{ buttonText }}</span>
+                    </button>
+                    <button class="btn btn-secondary" (click)="skipOneSecond()" [disabled]="isGuessInputDisabled">
+                        <span> Skip (+1s)</span>
+                    </button>
+                </div>
+                <div class="list-group" *ngIf="showSuggestions()">
+                    <a href="#" class="list-group-item list-group-item-action"
+                        *ngFor="let suggestion of filteredSuggestions.slice(0, 5)" (click)="checkSelection(suggestion)"
                         [ngClass]="{ 'disabled': isListDisabled }">
                         {{ suggestion }}
-                    </li>
-                </ul>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="player-preview">
+                <div class="imgbox">
+                    <img class="image-controller" />
+                    <img class="reflection">
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="attempts">
-    <ul>
-        <li *ngFor="let attempt of attempts" [ngStyle]="{ color: attempt.correct ? 'green' : 'red' }">
-            {{ attempt.text }}
-        </li>
-    </ul>
+<div class="container my-2" *ngIf="attemptMade">
+    <div class="row p-2 pb-0 pe-lg-0 pt-lg-2 align-items-start rounded-3 border shadow-lg">
+        <div class="attempts">
+            <ul>
+                <li *ngFor="let attempt of attempts" [ngStyle]="{ color: attempt.correct ? 'green' : 'red' }">
+                    {{ attempt.text }}
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>

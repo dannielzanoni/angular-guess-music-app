@@ -22,7 +22,6 @@ export class ApiRequestService {
 
     try {
       const response = await axios.request(options);
-      // console.log('usando services');
       // console.log(response.data);
       return response.data;
     } catch (error) {

@@ -1,0 +1,22 @@
+* {
+  font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  letter-spacing: -0.1rem;
+  font-size: 20px;
+  color: white;
+  background-color: #191919;
+}
+
+.nav-item:hover .nav-link {
+  color: #ad0000 !important;
+}
+
+.nav-item-icon {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item-icon img {
+  margin-right: 0.5rem;
+}
