@@ -4,7 +4,7 @@
 
 - Projeto criado em Angular, com integração com a API do Deezer;
 - Guess The Music é um jogo onde o usuário pode escolher entre sua banda/artista favoritos para adivinhar uma música aleatória com uma pequena demonstração de um segundo, que aumenta conforme o usuário erra ou adiciona(skippa) mais segundos;
-- Você pode acessá-lo aqui: [https://guess-the-music-app.web.app/](https://guess-the-music-app.web.app/)
+- Você pode acessá-lo aqui: <a href="https://guess-the-music-app.web.app/" target="_blank" rel="noopener noreferrer">https://guess-the-music-app.web.app/</a>
 
 ![image](https://github.com/user-attachments/assets/8b745641-5077-43c2-89c8-a8163958f21b)
 ![image](https://github.com/user-attachments/assets/965cbe8d-be71-4d70-b14a-f450a57076cc)
