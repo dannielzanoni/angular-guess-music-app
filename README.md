@@ -12,6 +12,7 @@
 ## Observações sobre o projeto
 
 - Para rodar locamente é necessário ter uma API Key da API do Deezer, você consegue em [Developers.Deezer](https://developers.deezer.com/)
+- Variáveis de ambiente que devem ser alteradas disponíveis em **src/environment/environment.sample.ts**
 
 ## Instalação do Projeto
 
